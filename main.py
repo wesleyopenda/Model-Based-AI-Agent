@@ -48,3 +48,18 @@ class Agent(Environment): # to link the agent to the environment
             count += 1
         print('finished cleaning :-)')
         print('New conditions: ', Environment.location_condition, 'Cleaning Method', Environment.cleaning_method)
+
+# object creation
+count = 0
+The_environment = Environment()
+# clean more than once
+while count < 10:
+    print()
+    print('----------Run', count+1, '--------------')
+    print()
+    The_environment.location_condition['a'] = random.randint(0, 1)
+    The_environment.location_condition['b'] = random.randint(0, 1)
+    The_environment.location_condition['c'] = random.randint(0, 1)
+    The_environment.location_condition['d'] = random.randint(0, 1)
+    The_agent = Agent(The_environment)
+    count += 1
