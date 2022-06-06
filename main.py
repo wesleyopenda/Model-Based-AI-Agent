@@ -25,9 +25,9 @@ class Environment(object):
 class Agent(Environment): # to link the agent to the environment
     def __init__(self, Environment): # inherits constructors from the Environment class
         # To find out the location of the vacuum and the condition of where it is
-        print('Vacuum location', Environment.vacuum_location)
-        print('Location condition', Environment.location_condition)
-        print('Cleaning Method', Environment.cleaning_method)
+        print('Vacuum is at Gate', Environment.vacuum_location)
+        print('Gate conditions', Environment.location_condition)
+        print('Last Cleaning Method', Environment.cleaning_method)
         count = 0 # makes it loop and not go out of range
         while count < 4:
             if Environment.location_condition[Environment.vacuum_location] == 1:
@@ -36,9 +36,9 @@ class Agent(Environment): # to link the agent to the environment
                 else:
                     Environment.cleaning_method[Environment.vacuum_location] = 'l'
                 Environment.location_condition[Environment.vacuum_location] = 0
-                print('Location ', Environment.vacuum_location ,'cleaned')
+                print('Gate', Environment.vacuum_location ,'cleaned')
             else:
-                print('Location', Environment.vacuum_location,' is already clean')
+                print('Gate', Environment.vacuum_location,'is already clean')
 
             new_index = Environment.location.index(Environment.vacuum_location) + 1 # read index from dict and added 1 to it
             if new_index == 4:
@@ -47,10 +47,14 @@ class Agent(Environment): # to link the agent to the environment
             Environment.vacuum_location = Environment.location[new_index] # moves the vacuum to the new location
             count += 1
         print('finished cleaning :-)')
-        print('New conditions: ', Environment.location_condition, 'Cleaning Method', Environment.cleaning_method)
+        print('New Gate Conditions:', Environment.location_condition, 'Cleaning Method', Environment.cleaning_method)
 
 # object creation
 count = 0
+a = 0
+b = 0
+c = 0
+d = 0
 The_environment = Environment()
 # clean more than once
 while count < 10:
@@ -61,5 +65,20 @@ while count < 10:
     The_environment.location_condition['b'] = random.randint(0, 1)
     The_environment.location_condition['c'] = random.randint(0, 1)
     The_environment.location_condition['d'] = random.randint(0, 1)
+
+    # track number of times a gate was visited
+    if The_environment.location_condition['a'] == 1:
+        a += 1
+    elif The_environment.location_condition['b'] == 1:
+        b += 1
+    elif The_environment.location_condition['c'] == 1:
+        c += 1
+    elif The_environment.location_condition['d'] == 1:
+        d += 1
     The_agent = Agent(The_environment)
     count += 1
+print('The agent spends', a/10*100, '% of time at Gate a')
+print('The agent spends', b/10*100, '% of time at Gate b')
+print('The agent spends', c/10*100, '% of time at Gate c')
+print('The agent spends', d/10*100, '% of time at Gate d')
+print(a, b, c, d)
