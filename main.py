@@ -1,4 +1,5 @@
 import random
+import math
 
 class Environment(object):
     def __init__(self):
@@ -57,7 +58,7 @@ c = 0
 d = 0
 The_environment = Environment()
 # clean more than once
-while count < 10:
+while count < 12:
     print()
     print('----------Run', count+1, '--------------')
     print()
@@ -77,8 +78,8 @@ while count < 10:
         d += 1
     The_agent = Agent(The_environment)
     count += 1
-print('The agent spends', a/10*100, '% of time at Gate a')
-print('The agent spends', b/10*100, '% of time at Gate b')
-print('The agent spends', c/10*100, '% of time at Gate c')
-print('The agent spends', d/10*100, '% of time at Gate d')
-print(a, b, c, d)
+print('The agent spends', a/12*100, '% of time at Gate a')
+print('The agent spends', b/12*100, '% of time at Gate b')
+print('The agent spends', c/12*100, '% of time at Gate c')
+print('The agent spends', d/12*100, '% of time at Gate d')
+print(math.ceil(a), math.ceil(b), math.ceil(c), math.ceil(d))
