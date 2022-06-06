@@ -21,3 +21,30 @@ class Environment(object):
         self.cleaning_method['b'] = random.choice(self.mode)
         self.cleaning_method['c'] = random.choice(self.mode)
         self.cleaning_method['d'] = random.choice(self.mode)
+
+class Agent(Environment): # to link the agent to the environment
+    def __init__(self, Environment): # inherits constructors from the Environment class
+        # To find out the location of the vacuum and the condition of where it is
+        print('Vacuum location', Environment.vacuum_location)
+        print('Location condition', Environment.location_condition)
+        print('Cleaning Method', Environment.cleaning_method)
+        count = 0 # makes it loop and not go out of range
+        while count < 4:
+            if Environment.location_condition[Environment.vacuum_location] == 1:
+                if Environment.cleaning_method[Environment.vacuum_location] == 'l': # if location was cleaned lightly before, clean it thoroughly now
+                    Environment.cleaning_method[Environment.vacuum_location] = 't'
+                else:
+                    Environment.cleaning_method[Environment.vacuum_location] = 'l'
+                Environment.location_condition[Environment.vacuum_location] = 0
+                print('Location ', Environment.vacuum_location ,'cleaned')
+            else:
+                print('Location', Environment.vacuum_location,' is already clean')
+
+            new_index = Environment.location.index(Environment.vacuum_location) + 1 # read index from dict and added 1 to it
+            if new_index == 4:
+                new_index = 0
+
+            Environment.vacuum_location = Environment.location[new_index] # moves the vacuum to the new location
+            count += 1
+        print('finished cleaning :-)')
+        print('New conditions: ', Environment.location_condition, 'Cleaning Method', Environment.cleaning_method)
