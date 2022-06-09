@@ -1,85 +1,77 @@
 import random
-import math
+import time
+
+class Performance:
+    def __init__(self):
+        self.score = 0
+        self.visits = 0
+        self.timestamp = 0
+
+    def Display_Score(self):
+        print('Score:', self.score)
+        p = (self.score / self.visits) * 100
+        print('Performance Score:', p, '%')
+        return p
 
 class Environment(object):
     def __init__(self):
-        self.location = ['a', 'b', 'c', 'd']
-        self.mode = ['t', 'l'] # represents modes of cleaning, thorough or light
-        self.location_condition = {'a' : '0',
-                                   'b' : '0',
-                                   'c' : '0',
-                                   'd' : '0'}
-        self.cleaning_method = {'a' : 't',
-                                'b' : 't',
-                                'c' : 't',
-                                'd' : 't'}
-        self.vacuum_location = random.choice(self.location) # pick a random location
-        self.location_condition['a'] = random.randint(0, 1)
-        self.location_condition['b'] = random.randint(0, 1)
-        self.location_condition['c'] = random.randint(0, 1)
-        self.location_condition['d'] = random.randint(0, 1)
-        self.cleaning_method['a'] = random.choice(self.mode) # pick a random cleaning method
-        self.cleaning_method['b'] = random.choice(self.mode)
-        self.cleaning_method['c'] = random.choice(self.mode)
-        self.cleaning_method['d'] = random.choice(self.mode)
+        self.locationCondition = {'a': '0',
+                                  'b': '0',
+                                  'c': '0',
+                                  'd': '0'}
+        # randomize conditions
+        self.locationCondition['a'] = random.randint(0, 1)
+        self.locationCondition['b'] = random.randint(0, 1)
+        self.locationCondition['c'] = random.randint(0, 1)
+        self.locationCondition['d'] = random.randint(0, 1)
 
-class Agent(Environment): # to link the agent to the environment
-    def __init__(self, Environment): # inherits constructors from the Environment class
-        # To find out the location of the vacuum and the condition of where it is
-        print('Vacuum is at Gate', Environment.vacuum_location)
-        print('Gate conditions', Environment.location_condition)
-        print('Last Cleaning Method', Environment.cleaning_method)
-        count = 0 # makes it loop and not go out of range
+        # instantiate locations
+        self.Location = ['a', 'b', 'c', 'd']
+        self.vacuumLocation = random.choice(self.Location)
+
+class MyAgent(Environment, Performance):
+    def __init__(self, Environment, Performance):
+        Performance.timestamp = Performance.timestamp + 1
+        # Status before visit
+        print('Vacuum is at Gate: ', Environment.vacuumLocation)
+        print('Location condition before visit', Environment.locationCondition, 'at timestamp',
+              Performance.timestamp)
+        count = 0
         while count < 4:
-            if Environment.location_condition[Environment.vacuum_location] == 1:
-                if Environment.cleaning_method[Environment.vacuum_location] == 'l': # if location was cleaned lightly before, clean it thoroughly now
-                    Environment.cleaning_method[Environment.vacuum_location] = 't'
-                else:
-                    Environment.cleaning_method[Environment.vacuum_location] = 'l'
-                Environment.location_condition[Environment.vacuum_location] = 0
-                print('Gate', Environment.vacuum_location ,'cleaned')
+            if Environment.locationCondition[Environment.vacuumLocation] == 1:
+                Environment.locationCondition[Environment.vacuumLocation] = 0
+                print('Gate:', Environment.vacuumLocation, 'has been Cleaned.')
+
+                Performance.score = Performance.score + 1
             else:
-                print('Gate', Environment.vacuum_location,'is already clean')
-
-            new_index = Environment.location.index(Environment.vacuum_location) + 1 # read index from dict and added 1 to it
-            if new_index == 4:
-                new_index = 0
-
-            Environment.vacuum_location = Environment.location[new_index] # moves the vacuum to the new location
+                print('Boarding Gate:', Environment.vacuumLocation, 'is already clean.')
+            newIndex = Environment.Location.index(Environment.vacuumLocation) + 1
+            if newIndex == 4:
+                newIndex = 0
+            Environment.vacuumLocation = Environment.Location[newIndex]
             count += 1
-        print('finished cleaning :-)')
-        print('New Gate Conditions:', Environment.location_condition, 'Cleaning Method', Environment.cleaning_method)
+            Performance.visits = Performance.visits + 1
+        # Status after visit
+        print('Environment Condition after visit ', Environment.locationCondition, 'at timestamp',
+              Performance.timestamp)
+        print()
 
-# object creation
-count = 0
-a = 0
-b = 0
-c = 0
-d = 0
-The_environment = Environment()
-# clean more than once
-while count < 12:
-    print()
-    print('----------Run', count+1, '--------------')
-    print()
-    The_environment.location_condition['a'] = random.randint(0, 1)
-    The_environment.location_condition['b'] = random.randint(0, 1)
-    The_environment.location_condition['c'] = random.randint(0, 1)
-    The_environment.location_condition['d'] = random.randint(0, 1)
-
-    # track number of times a gate was visited
-    if The_environment.location_condition['a'] == 1:
-        a += 1
-    elif The_environment.location_condition['b'] == 1:
-        b += 1
-    elif The_environment.location_condition['c'] == 1:
-        c += 1
-    elif The_environment.location_condition['d'] == 1:
-        d += 1
-    The_agent = Agent(The_environment)
-    count += 1
-print('The agent spends', a/12*100, '% of time at Gate a')
-print('The agent spends', b/12*100, '% of time at Gate b')
-print('The agent spends', c/12*100, '% of time at Gate c')
-print('The agent spends', d/12*100, '% of time at Gate d')
-print(math.ceil(a), math.ceil(b), math.ceil(c), math.ceil(d))
+x = 0
+theScore = Performance()
+timeinterval = 2  # simulates 2 hour interval
+while x < 12:
+    theEnvironment = Environment()
+    theVacuum = MyAgent(theEnvironment, theScore)
+    if x == 6:  # halfway through monitor performance/correct to 5
+        p = theScore.Display_Score()
+        if p > 50:
+            print('Increasing visits and intervals')
+            timeinterval = 1
+            x = 0
+        else:
+            print('Reducing visits and intervals')
+            timeinterval = 3
+            x = x + 3
+    time.sleep(timeinterval)
+    x = x + 1
+    theScore.Display_Score()
