@@ -42,9 +42,9 @@ class MyAgent(Environment, Performance):
                 Environment.locationCondition[Environment.vacuumLocation] = 0
                 print('Gate:', Environment.vacuumLocation, 'has been Cleaned.')
 
-                Performance.score = Performance.score + 1
+                Performance.score += 1
             else:
-                print('Boarding Gate:', Environment.vacuumLocation, 'is already clean.')
+                print('Gate:', Environment.vacuumLocation, 'is already clean.')
             newIndex = Environment.Location.index(Environment.vacuumLocation) + 1
             if newIndex == 4:
                 newIndex = 0
